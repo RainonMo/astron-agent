@@ -122,7 +122,7 @@ public class WorkflowReleaseServiceImpl implements WorkflowReleaseService {
             syncToApiSystem(botId, flowId, versionName, appId);
 
             // 6. Update audit result to success
-            updateAuditResult(response.getWorkflowVersionId(), "成功");
+            updateAuditResult(response.getWorkflowVersionId(), "Success");
 
             log.info("Workflow bot publish and sync successful: botId={}, versionId={}, versionName={}",
                     botId, response.getWorkflowVersionId(), response.getWorkflowVersionName());

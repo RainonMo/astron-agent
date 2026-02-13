@@ -368,6 +368,7 @@ export const en = {
     modelManagement: 'Model Management',
     resourceManagement: 'Resource Management',
     appManagement: 'App Management',
+    wechatBotManagement: 'WeChat Bot',
 
     // Order type translations
     orderTypes: {

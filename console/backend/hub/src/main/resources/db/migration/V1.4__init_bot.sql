@@ -472,3 +472,57 @@ CREATE TABLE IF NOT EXISTS bot_template (
     INDEX idx_status_lang (bot_status, language)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Bot template table';
 
+-- 企业微信机器人配置表
+CREATE TABLE IF NOT EXISTS `wechat_bot_config` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `bot_key` VARCHAR(64) NOT NULL UNIQUE COMMENT '机器人唯一标识key',
+    `corp_id` VARCHAR(64) NOT NULL COMMENT '企业ID',
+    `agent_id` VARCHAR(64) NOT NULL COMMENT '应用ID',
+    `token` VARCHAR(128) NOT NULL COMMENT '回调Token',
+    `encoding_aes_key` VARCHAR(128) NOT NULL COMMENT '消息加解密密钥',
+    `agent_id_ref` VARCHAR(64) NOT NULL COMMENT '关联的智能体ID',
+    `callback_url` VARCHAR(512) COMMENT '回调URL',
+    `is_active` TINYINT(1) DEFAULT 1 COMMENT '是否启用',
+    `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `deleted` TINYINT(1) DEFAULT 0 COMMENT '删除标识',
+    PRIMARY KEY (`id`),
+    INDEX `idx_bot_key` (`bot_key`),
+    INDEX `idx_corp_id` (`corp_id`),
+    INDEX `idx_agent_id` (`agent_id`),
+    INDEX `idx_is_active` (`is_active`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='企业微信机器人配置表';
+
+-- 企业微信消息记录表
+CREATE TABLE IF NOT EXISTS `wechat_message` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `bot_key` VARCHAR(64) NOT NULL COMMENT '机器人key',
+    `message_id` VARCHAR(64) COMMENT '消息ID',
+    `from_user` VARCHAR(64) COMMENT '发送方用户ID',
+    `to_user` VARCHAR(64) COMMENT '接收方用户ID',
+    `msg_type` VARCHAR(32) NOT NULL COMMENT '消息类型(text/image/voice/video/location/link)',
+    `content` TEXT COMMENT '消息内容',
+    `media_id` VARCHAR(128) COMMENT '媒体文件ID',
+    `pic_url` VARCHAR(512) COMMENT '图片URL',
+    `format` VARCHAR(32) COMMENT '语音格式',
+    `recognition` TEXT COMMENT '语音识别结果',
+    `thumb_media_id` VARCHAR(128) COMMENT '缩略图媒体ID',
+    `location_x` DECIMAL(10,6) COMMENT '地理位置纬度',
+    `location_y` DECIMAL(10,6) COMMENT '地理位置经度',
+    `scale` INT COMMENT '地图缩放大小',
+    `label` VARCHAR(256) COMMENT '地理位置信息',
+    `title` VARCHAR(256) COMMENT '标题',
+    `description` TEXT COMMENT '描述',
+    `url` VARCHAR(512) COMMENT '链接URL',
+    `agent_response` TEXT COMMENT '智能体回复内容',
+    `response_status` VARCHAR(32) COMMENT '回复状态(success/error)',
+    `response_time` DATETIME COMMENT '回复时间',
+    `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    PRIMARY KEY (`id`),
+    INDEX `idx_bot_key` (`bot_key`),
+    INDEX `idx_message_id` (`message_id`),
+    INDEX `idx_from_user` (`from_user`),
+    INDEX `idx_msg_type` (`msg_type`),
+    INDEX `idx_create_time` (`create_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='企业微信消息记录表';
+

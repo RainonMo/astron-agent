@@ -16,6 +16,8 @@ import resourceManagementAct from '@/assets/svgs/aside-resource-act.svg';
 // TODO 应用管理图标替换
 import appManagement from '@/assets/svgs/aside-app-manage.svg';
 import appManagementAct from '@/assets//svgs/aside-app-manage-act.svg';
+import appManagement2 from '@/assets/svgs/aside-app-manage2.svg';
+import appManagementAct2 from '@/assets//svgs/aside-app-manage-act2.svg';
 
 import promptTab from '@/assets/imgs/sidebar/prompt.svg';
 import promptTabActive from '@/assets/imgs/sidebar/prompt-active.svg';
@@ -137,6 +139,13 @@ export const createMenuList = (): {
         subTitle: getTranslation('sidebar.appManagement'),
         activeTab: 'app',
         path: '/management/app',
+      },
+      {
+        icon: appManagement2,
+        iconAct: appManagementAct2,
+        subTitle: getTranslation('sidebar.wechatBotManagement'),
+        activeTab: 'wechat-bot',
+        path: '/management/wechat-bot',
       },
     ],
   },

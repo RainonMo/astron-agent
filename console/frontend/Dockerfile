@@ -8,15 +8,17 @@ WORKDIR /app
 RUN npm config set registry https://registry.npmjs.org/
 
 # 只拷贝依赖清单，利于缓存命中
-COPY console/frontend/package*.json ./
+COPY package*.json ./
 
 # 使用 BuildKit 缓存挂载，加速 npm；用 npm ci 更可复现
 RUN --mount=type=cache,target=/root/.npm \
     npm ci --legacy-peer-deps
 
 # 再拷贝源码，进行构建
-COPY console/frontend/ ./
-RUN npm run build-prod
+COPY . ./
+# 增加 Node.js 内存限制，添加详细错误输出
+ENV NODE_OPTIONS="--max-old-space-size=4096"
+RUN npm run build-prod || { echo "Build failed. Exit code: $?"; exit 1; }
 
 
 #############################################
@@ -79,7 +81,7 @@ EXPOSE ${NGINX_PORT}
 # 只复制一次构建出的静态资源
 COPY --from=builder /app/dist /var/www
 
-COPY console/frontend/docker-entrypoint.sh /docker-entrypoint.sh
+COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
 ENTRYPOINT ["/docker-entrypoint.sh"]

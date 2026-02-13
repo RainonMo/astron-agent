@@ -32,6 +32,7 @@ const ReleaseManagement = lazy(() => import('@/pages/release-management'));
 const BotApi = lazy(() => import('@/pages/bot-api/api'));
 const SharePage = lazy(() => import('@/pages/share-page'));
 const AppListPage = lazy(() => import('@/pages/bot-api/app-list'));
+const WechatBotManagement = lazy(() => import('@/pages/wechat-bot'));
 
 const routes = [
   {
@@ -134,6 +135,14 @@ const routes = [
         element: (
           <Suspense fallback={<Loading />}>
             <AppListPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/management/wechat-bot',
+        element: (
+          <Suspense fallback={<Loading />}>
+            <WechatBotManagement />
           </Suspense>
         ),
       },
