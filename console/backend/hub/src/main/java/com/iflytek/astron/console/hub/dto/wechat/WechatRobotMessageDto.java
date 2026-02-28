@@ -37,7 +37,7 @@ public class WechatRobotMessageDto {
     private FromInfo from;
 
     /**
-     * 消息类型：text(文本)、image(图片)、voice(语音)、file(文件)、mixed(图文混排)、quote(引用)
+     * 消息类型：text(文本)、image(图片)、voice(语音)、file(文件)、mixed(图文混排)、quote(引用)、stream_refresh(流式刷新)
      */
     private String msgType;
 
@@ -70,6 +70,27 @@ public class WechatRobotMessageDto {
      * 引用消息内容
      */
     private QuoteContent quote;
+    
+    /**
+     * 事件消息内容
+     */
+    private EventContent event;
+    
+    /**
+     * 流式刷新消息内容
+     */
+    private StreamRefreshContent streamRefresh;
+    
+    /**
+     * 流式刷新消息内容
+     */
+    @Data
+    public static class StreamRefreshContent {
+        /**
+         * 流式消息ID
+         */
+        private String streamId;
+    }
 
     /**
      * 发送者信息
@@ -171,5 +192,21 @@ public class WechatRobotMessageDto {
          * 当前回复内容
          */
         private String content;
+    }
+    
+    /**
+     * 事件消息内容
+     */
+    @Data
+    public static class EventContent {
+        /**
+         * 事件类型
+         */
+        private String eventType;
+        
+        /**
+         * 事件数据
+         */
+        private String eventData;
     }
 }

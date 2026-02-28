@@ -72,7 +72,7 @@ public interface WechatBotService extends IService<WechatBotConfig> {
      */
     String generateCallbackUrl(String botKey);
 
-    String verifyUrl(String botKey, String msgSignature, String timestamp, String nonce, String echostr) throws AesException;
+    String verifyUrl(String botKey, String msgSignature, String timestamp, String nonce, String echostr) throws AesException, com.iflytek.astron.console.hub.util.wechat.json.AesException;
 
-    String handleMessage(String botKey, String msgSignature, String timestamp, String nonce, String postData) throws AesException;
+    String handleMessage(String botKey, String msgSignature, String timestamp, String nonce, String postData) throws AesException, com.iflytek.astron.console.hub.util.wechat.json.AesException;
 }

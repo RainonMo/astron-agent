@@ -147,10 +147,12 @@ public class WorkflowBotChatServiceImpl implements WorkflowBotChatService {
         // If not submitted for publishing, use debug interface, otherwise use chat interface
         boolean isDebug = false;
         if (market == null || ShelfStatusEnum.isOffShelf(market.getBotStatus())) {
-            apiUsedUrl = debugUrl;
+            apiUsedUrl = debugUrl; // 未上架 -> 使用调试接口
             isDebug = true;
+            System.out.println("未上架 -> 使用调试接口");
         } else {
             apiUsedUrl = chatUrl;
+            System.out.println("已经上架");
         }
         log.info("apiUsedUrl:{}, workflow request parameters:{}", apiUsedUrl, JSON.toJSONString(workflowApiRequest));
         // If resuming session, use resume interface

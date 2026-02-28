@@ -1,0 +1,7 @@
+
+docker compose -f docker-compose-with-auth.yaml up -d --build
+docker build -f console/backend/hub/Dockerfile -t console-hub:bot .
+docker build -f console/frontend/Dockerfile -t console-frontend:bot .
+docker exec -it astron-agent-mysql mysql -uroot -proot123 astron_console
+
+docker build -f console/backend/hub/Dockerfile -t console-hub:wx1 .

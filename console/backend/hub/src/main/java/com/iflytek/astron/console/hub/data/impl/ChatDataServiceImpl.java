@@ -107,10 +107,14 @@ public class ChatDataServiceImpl implements ChatDataService {
                 .eq(ChatTreeIndex::getUid, chatReqRecords.getUid())
                 .orderByAsc(ChatTreeIndex::getId);
         List<ChatTreeIndex> childChatTreeIndexList = chatTreeIndexMapper.selectList(chatTreeQuery);
-        Long rootId = childChatTreeIndexList.getFirst().getRootChatId();
-        if (rootId != null && !rootId.equals(chatReqRecords.getChatId())) {
-            updateWrapper.eq(ChatList::getId, rootId);
-            chatListMapper.update(null, updateWrapper);
+        
+        // 检查列表是否为空，避免NoSuchElementException
+        if (!childChatTreeIndexList.isEmpty()) {
+            Long rootId = childChatTreeIndexList.getFirst().getRootChatId();
+            if (rootId != null && !rootId.equals(chatReqRecords.getChatId())) {
+                updateWrapper.eq(ChatList::getId, rootId);
+                chatListMapper.update(null, updateWrapper);
+            }
         }
         return chatReqRecords;
     }

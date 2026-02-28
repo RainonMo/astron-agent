@@ -98,7 +98,7 @@ public class WXBizMsgCrypt {
      * @return Base64 encoded string after encryption
      * @throws AesException AES encryption failed
      */
-    public String encrypt(String randomStr, String text) throws AesException {
+    String encrypt(String randomStr, String text) throws AesException {
         ByteGroup byteCollector = new ByteGroup();
         byte[] randomStrBytes = randomStr.getBytes(CHARSET);
         byte[] textBytes = text.getBytes(CHARSET);

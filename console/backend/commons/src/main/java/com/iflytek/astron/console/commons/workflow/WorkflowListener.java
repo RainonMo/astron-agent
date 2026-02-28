@@ -23,6 +23,7 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author mingsuiyongheng
@@ -39,6 +40,9 @@ public class WorkflowListener extends EventSourceListener {
     private String sid;
     private boolean isDebug = false;
     private SseEmitter emitter;
+
+    // 静态映射：存储 sseId 对应的最终结果，供企业微信机器人使用
+    private static final Map<String, String> STREAM_RESULT_MAP = new ConcurrentHashMap<>();
 
     public WorkflowListener(WorkflowClient chainClient, ChatReqRecords records, String sseId,
             WssListenerService wssListenerService,
@@ -221,6 +225,13 @@ public class WorkflowListener extends EventSourceListener {
             return;
         }
 
+        // 将最终结果存入静态映射，供企业微信机器人使用
+        String finalResultStr = finalResult.toString();
+        if (StringUtils.isNotBlank(finalResultStr)) {
+            STREAM_RESULT_MAP.put(streamId, finalResultStr);
+            log.info("Stored final result for streamId: {}, length: {}", streamId, finalResultStr.length());
+        }
+
         try {
             // Try to send completion data
             emitter.send(SseEmitter.event().name("complete").data(completeData.toJSONString()));
@@ -353,5 +364,23 @@ public class WorkflowListener extends EventSourceListener {
 
     public StringBuffer getFinalResult() {
         return finalResult;
+    }
+
+    /**
+     * 获取 streamId 对应的最终结果
+     * @param streamId 流式 ID
+     * @return 最终结果，如果不存在则返回 null
+     */
+    public static String getStreamResult(String streamId) {
+        return STREAM_RESULT_MAP.get(streamId);
+    }
+
+    /**
+     * 移除 streamId 对应的结果
+     * @param streamId 流式 ID
+     * @return 被移除的结果，如果不存在则返回 null
+     */
+    public static String removeStreamResult(String streamId) {
+        return STREAM_RESULT_MAP.remove(streamId);
     }
 }

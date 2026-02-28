@@ -1,7 +1,6 @@
 package com.iflytek.astron.console.hub.service.wechat;
 
 import com.iflytek.astron.console.hub.dto.wechat.WechatRobotMessageDto;
-import com.iflytek.astron.console.hub.dto.wechat.WechatRobotReplyDto;
 import com.iflytek.astron.console.hub.entity.WechatBotConfig;
 
 /**
@@ -18,54 +17,16 @@ public interface WechatRobotMessageService {
      * @return 解析后的消息DTO
      */
     WechatRobotMessageDto parseMessage(String xmlContent);
-
+    
     /**
-     * 异步处理消息并生成回复
+     * 同步处理消息并生成流式回复
      *
-     * @param config
+     * @param config 机器人配置
      * @param messageDto 消息DTO
+     * @param timestamp 时间戳
+     * @param nonce 随机数
+     * @return 加密后的回复消息
      */
-    void processMessageAsync(WechatBotConfig config, WechatRobotMessageDto messageDto);
+    String processMessageSync(WechatBotConfig config, WechatRobotMessageDto messageDto, String timestamp, String nonce);
 
-    /**
-     * 处理文本消息
-     * 
-     * @param messageDto 消息DTO
-     * @return 回复消息
-     */
-    WechatRobotReplyDto processTextMessage(WechatBotConfig config,WechatRobotMessageDto messageDto);
-
-    /**
-     * 处理图片消息
-     * 
-     * @param messageDto 消息DTO
-     * @return 回复消息
-     */
-    WechatRobotReplyDto processImageMessage(WechatRobotMessageDto messageDto);
-
-    /**
-     * 处理语音消息
-     * 
-     * @param messageDto 消息DTO
-     * @return 回复消息
-     */
-    WechatRobotReplyDto processVoiceMessage(WechatRobotMessageDto messageDto);
-
-    /**
-     * 处理文件消息
-     * 
-     * @param messageDto 消息DTO
-     * @return 回复消息
-     */
-    WechatRobotReplyDto processFileMessage(WechatRobotMessageDto messageDto);
-
-    /**
-     * 发送被动回复消息
-     * 
-     * @param replyDto 回复消息DTO
-     * @param chatId 会话ID
-     * @param aiBotId 机器人ID
-     *
-     */
-    void sendPassiveReply(WechatRobotReplyDto replyDto, String chatId, String aiBotId,WechatBotConfig config);
 }

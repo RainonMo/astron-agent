@@ -101,7 +101,7 @@ public class BotChatServiceImpl implements BotChatService {
     private PersonalityConfigService personalityConfigService;
 
     /**
-     * Function to handle chat messages
+     * Function to handle chat messages demo
      *
      * @param chatBotReqDto Chat bot request data object
      * @param sseEmitter Server-sent events emitter

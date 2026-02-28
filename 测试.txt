@@ -1,0 +1,52 @@
+ curl -X POST "http://localhost/api/wechat-bot/callback/453990fd541a40d6a95797330c76f8c3?msg_signature=95cb86dfa4ffaa0476d2642eb56ba351d3ff37cf&timestamp=1772180131&nonce=FthN9R6Oqs"  -H "Content-Type: application/json"  -d '{"encrypt": "ztlYSJjTAmFSgzGFShvK3tLUwUtE3nupgYwWffOU0Dfi+L2IZ1quqNptnxkEip40f0EO1ihaBY7yt8tfC5M9hT/N3xm4Hji8YR4HzpPE0v1JpBQJpyzrHiXTHIT4SvCi", "msgsignature": "95cb86dfa4ffaa0476d2642eb56ba351d3ff37cf", "timestamp": "FthN9R6Oqs", "nonce": "1772180131"}'
+ 
+ http://localhost:8080/api/wechat-bot/callback/453990fd541a40d6a95797330c76f8c3
+ 
+ 
+ {
+    "msgid": "CAIQ16HMjQYY\/NGagIOAgAMgq4KM0AI=",
+    "aibotid": "12",
+    "chatid": "13",
+    "chattype": "single",
+    "from": {
+        "userid": "123"
+    },
+    "response_url": "RESPONSEURL",
+    "msgtype": "text",
+    "text": {
+        "content": "你好"
+    }
+}
+
+{
+    "msgid": "123",
+    "aibotid": "1",
+    "chatid": "2",
+    "from": {
+        "userid": "64a3fbf2-4a68-41c2-ad30-a64eb1a61bee"
+    },
+    "msgtype": "stream",
+    "stream": {
+        "id": "29e69220-c"
+    }
+}
+curl -X POST "http://localhost/api/wechat-bot/callback/453990fd541a40d6a95797330c76f8c3?msg_signature=e39844d4ac092aa166c58fef7dea026899a0de93&timestamp=1772184420&nonce=i0OfxJPwUN" \
+  -H "Content-Type: application/json" \
+  -d '{"encrypt": "2vIKovnViZ31wpkKBzPAb1v7Za8Xx7pZfaRFTAkQlKDZwjxGmKsrgnhfdAzBSpx1aC1FHfBEzz7huZC8hlsU0C/6M9+rY0J3NQYJHUJY1ZaYT7tFDeHxA5F6yWJuj8/nCzHsYfsuCUHDas8R5+y4GOwQRCyKtTOTFVOqIOGkCW6wAysg+A5GY5rk35cDkRrpJMfWvjd5kvaC96YHY4YmP2GQA9gGDgZUc2rh++acWZt55WGn+5P9NH9obhh2rKFAATANLFqBi1w03bEHRcLWJmiPu8N8UFnfCrwsdL7OFtiVWikHEjCH1FyYy4Jr/POnwEL/MJ0lj4mmrTMh14OCKw==", 
+"tousername":"wx5823bf96d3bd56c7","agentid":"218"}'
+
+curl -X POST "http://localhost/api/wechat-bot/callback/453990fd541a40d6a95797330c76f8c3?msg_signature=3e5fa784fb512a9da9153e72967ef7c4e70b7c2f&timestamp=1772184498&nonce=vVrGaopgvl" \
+  -H "Content-Type: application/json" \
+  -d '{"encrypt": "G39nw637k8dbsLRVhlgN2A6i+ztS2HaiqJrTUunxPq6XA1JWEji4TwQ1VkzG8F/tRKpzdNCEeVPNZPd7+exlO3cb/jKQ9u8SHKxWMnYxcD1JIX81HmNJQ8ChRK5Ki/02UgIl4tAIiDv94Vtq0jn+6M+hrZ2N4wBwwlHKV2YWVj5kYrlTDTy3qMZ/lWCRW1kF5e0dr72kaW8RsI8hZxtX4lI6ZkjfgYY6PvFXFHfXrUHnPhIQIEYIWIblfF9Uqo2R", 
+"tousername":"wx5823bf96d3bd56c7","agentid":"218"}'
+
+ WeChat robot callback received
+ Decrypted WeChat robot message
+ Stream reply JSON:
+ 
+ Starting async streaming process for streamId
+ Processing chat request
+Encrypted stream reply
+
+Async streaming process completed for
+SSE connection ended normally,

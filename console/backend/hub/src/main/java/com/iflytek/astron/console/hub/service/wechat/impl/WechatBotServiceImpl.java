@@ -13,8 +13,8 @@ import com.iflytek.astron.console.hub.entity.WechatBotConfig;
 import com.iflytek.astron.console.hub.mapper.WechatBotConfigMapper;
 import com.iflytek.astron.console.hub.service.wechat.WechatBotService;
 import com.iflytek.astron.console.hub.service.wechat.WechatRobotMessageService;
-import com.iflytek.astron.console.hub.util.wechat.AesException;
-import com.iflytek.astron.console.hub.util.wechat.WXBizMsgCrypt;
+import com.iflytek.astron.console.hub.util.wechat.json.AesException;
+import com.iflytek.astron.console.hub.util.wechat.json.WXBizJsonMsgCrypt;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -149,10 +149,10 @@ public class WechatBotServiceImpl extends ServiceImpl<WechatBotConfigMapper, Wec
         }
 
         // 使用空字符串作为receiveId，符合智能机器人场景
-        WXBizMsgCrypt pc = new WXBizMsgCrypt(config.getToken(), config.getEncodingAesKey(), "");
+        WXBizJsonMsgCrypt pc = new WXBizJsonMsgCrypt(config.getToken(), config.getEncodingAesKey(), "");
 
         // 验证URL并解密echostr
-        String decryptedEchostr = pc.verifyUrl(msgSignature, timestamp, nonce, echostr);
+        String decryptedEchostr = pc.VerifyURL(msgSignature, timestamp, nonce, echostr);
         log.info("WeChat robot URL verification successful");
 
         return decryptedEchostr;
@@ -187,20 +187,20 @@ public class WechatBotServiceImpl extends ServiceImpl<WechatBotConfigMapper, Wec
         postData = UnicodeUtil.toString(postData);
 
         // 使用空字符串作为receiveId，符合智能机器人场景
-        WXBizMsgCrypt pc = new WXBizMsgCrypt(config.getToken(), config.getEncodingAesKey(), "");
+        WXBizJsonMsgCrypt pc = new WXBizJsonMsgCrypt(config.getToken(), config.getEncodingAesKey(), "");
 
-        // 解密消息
-        String decryptedMessage = pc.decryptMsg(msgSignature, timestamp, nonce, postData);
+        // 1.解密消息
+        String decryptedMessage = pc.DecryptMsg(msgSignature, timestamp, nonce, postData);
         log.debug("Decrypted WeChat robot message: {}", decryptedMessage);
 
-        // 解析并处理消息
+        // 2.解析并处理消息
         WechatRobotMessageDto messageDto = wechatRobotMessageService.parseMessage(decryptedMessage);
 
-          // 异步处理消息并生成流式回复
-        wechatRobotMessageService.processMessageAsync(config, messageDto);
-
-        // 立即返回成功响应
-        return "success";
+        // 3.同步处理消息并生成流式回复
+        String encryptedReply = wechatRobotMessageService.processMessageSync(config, messageDto, timestamp, nonce);
+        
+        // 返回加密后的流式回复
+        return encryptedReply;
     }
 
 }

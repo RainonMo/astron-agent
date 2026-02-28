@@ -115,7 +115,7 @@ public class WechatBotCallBackController {
             }
 
             log.warn("Invalid request: neither echostr nor postData provided");
-            return "fail";
+            return "fail"; // todo 是否有问题
 
         } catch (Exception e) {
             log.error("Failed to handle WeChat robot callback: msg_signature={}, timestamp={}, nonce={}",
