@@ -65,7 +65,7 @@ public class WechatRobotMessageServiceImpl implements WechatRobotMessageService 
             // 根据消息类型解析具体内容
             String msgType = messageDto.getMsgType();
             switch (msgType) {
-                case "text":
+                case "text": //todo 当有引用时
                     JSONObject textJson = json.getJSONObject("text");
                     if (textJson != null) {
                         WechatRobotMessageDto.TextContent textContent = new WechatRobotMessageDto.TextContent();
@@ -78,8 +78,7 @@ public class WechatRobotMessageServiceImpl implements WechatRobotMessageService 
                     JSONObject imageJson = json.getJSONObject("image");
                     if (imageJson != null) {
                         WechatRobotMessageDto.ImageContent imageContent = new WechatRobotMessageDto.ImageContent();
-                        imageContent.setImageUrl(imageJson.getString("imageUrl"));
-                        imageContent.setFileName(imageJson.getString("fileName"));
+                        imageContent.setUrl(imageJson.getString("url"));
                         messageDto.setImage(imageContent);
                     }
                     break;
@@ -88,8 +87,7 @@ public class WechatRobotMessageServiceImpl implements WechatRobotMessageService 
                     JSONObject voiceJson = json.getJSONObject("voice");
                     if (voiceJson != null) {
                         WechatRobotMessageDto.VoiceContent voiceContent = new WechatRobotMessageDto.VoiceContent();
-                        voiceContent.setVoiceUrl(voiceJson.getString("voiceUrl"));
-                        voiceContent.setDuration(voiceJson.getInteger("duration"));
+                        voiceContent.setContent(voiceJson.getString("context"));
                         messageDto.setVoice(voiceContent);
                     }
                     break;
@@ -98,29 +96,47 @@ public class WechatRobotMessageServiceImpl implements WechatRobotMessageService 
                     JSONObject fileJson = json.getJSONObject("file");
                     if (fileJson != null) {
                         WechatRobotMessageDto.FileContent fileContent = new WechatRobotMessageDto.FileContent();
-                        fileContent.setFileUrl(fileJson.getString("fileUrl"));
-                        fileContent.setFileName(fileJson.getString("fileName"));
-                        fileContent.setFileSize(fileJson.getLong("fileSize"));
+                        fileContent.setUrl(fileJson.getString("url"));
                         messageDto.setFile(fileContent);
                     }
                     break;
                     
-                case "mixed":
+                case "mixed"://todo 当有引用时
                     JSONObject mixedJson = json.getJSONObject("mixed");
                     if (mixedJson != null) {
-                        WechatRobotMessageDto.MixedContent mixedContent = new WechatRobotMessageDto.MixedContent();
-                        mixedContent.setContent(mixedJson.getString("content"));
-                        messageDto.setMixed(mixedContent);
-                    }
-                    break;
-                    
-                case "quote":
-                    JSONObject quoteJson = json.getJSONObject("quote");
-                    if (quoteJson != null) {
-                        WechatRobotMessageDto.QuoteContent quoteContent = new WechatRobotMessageDto.QuoteContent();
-                        quoteContent.setQuotedContent(quoteJson.getString("quotedContent"));
-                        quoteContent.setContent(quoteJson.getString("content"));
-                        messageDto.setQuote(quoteContent);
+                        JSONArray msgItems = mixedJson.getJSONArray("msg_item");
+                        if (msgItems != null) {
+                            WechatRobotMessageDto.TextContent textContent = new WechatRobotMessageDto.TextContent();
+                            WechatRobotMessageDto.ImageContent imageContent = new WechatRobotMessageDto.ImageContent();
+
+                            for (int i = 0; i < msgItems.size(); i++) {
+                                JSONObject item = msgItems.getJSONObject(i);
+                                String msgtype = item.getString("msgtype");
+
+                                // 处理文本类型的消息
+                                if ("text".equals(msgtype)) {
+                                    JSONObject textObj = item.getJSONObject("text");
+                                    if (textObj != null) {
+                                        String content = textObj.getString("content");
+                                        if (content != null) {
+                                            textContent.setContent(content);
+                                        }
+                                    }
+                                }
+                                if ("image".equals(msgtype)) {
+                                    JSONObject imageObj = item.getJSONObject("image");
+                                    if (imageObj != null) {
+                                        String url = imageObj.getString("url");
+                                        if (url != null) {
+                                            imageContent.setUrl(url);
+                                        }
+                                    }
+                                }
+                            }
+                            messageDto.setText(textContent);
+                            messageDto.setImage(imageContent);
+
+                        }
                     }
                     break;
                     
@@ -129,7 +145,6 @@ public class WechatRobotMessageServiceImpl implements WechatRobotMessageService 
                     if (eventJson != null) {
                         WechatRobotMessageDto.EventContent eventContent = new WechatRobotMessageDto.EventContent();
                         eventContent.setEventType(eventJson.getString("eventType"));
-                        eventContent.setEventData(eventJson.getString("eventData"));
                         messageDto.setEvent(eventContent);
                     }
                     break;
@@ -175,14 +190,14 @@ public class WechatRobotMessageServiceImpl implements WechatRobotMessageService 
                     streamReply = processImageMessageSync(messageDto, timestamp, nonce, config);
                     break;
                 case "voice":
-                    streamReply = processVoiceMessageSync(messageDto, timestamp, nonce, config);
+                    // 按文本消息处理
+                    streamReply = processTextMessageSync(config, messageDto, timestamp, nonce);
                     break;
                 case "file":
                     streamReply = processFileMessageSync(messageDto, timestamp, nonce, config);
                     break;
                 case "mixed":
-                case "quote":
-                    // 对于图文混排和引用消息，按文本消息处理
+                    // 对于图文混排和引用消息，按文本消息处理 todo
                     streamReply = processTextMessageSync(config, messageDto, timestamp, nonce);
                     break;
                 case "event":
@@ -216,10 +231,13 @@ public class WechatRobotMessageServiceImpl implements WechatRobotMessageService 
             String content = "";
             if (messageDto.getText() != null) {
                 content = messageDto.getText().getContent();
-            } else if (messageDto.getMixed() != null) {
-                content = messageDto.getMixed().getContent();
-            } else if (messageDto.getQuote() != null) {
-                content = messageDto.getQuote().getContent();
+            } else if (messageDto.getVoice() != null) {
+                content = messageDto.getVoice().getContent();
+            }
+
+            String url = "";
+            if (messageDto.getImage() != null) {
+                url = messageDto.getImage().getUrl();
             }
 
             log.info("Processing text message synchronously from user {}: {}",
@@ -239,6 +257,7 @@ public class WechatRobotMessageServiceImpl implements WechatRobotMessageService 
             chatBotReqDto.setChatId(chatId);
             chatBotReqDto.setBotId(Integer.valueOf(config.getAgentIdRef()));
             chatBotReqDto.setEdit(false);
+            //chatBotReqDto.setUrl(url); // 暂无多模态，只是文件url
 
             // 创建一个虚拟的 SseEmitter，不需要实际发送数据
             // WorkflowListener 会在完成时将结果存入静态映射
@@ -291,22 +310,15 @@ public class WechatRobotMessageServiceImpl implements WechatRobotMessageService 
     }
 
     /**
-     * 同步处理图片消息并返回流式回复todo
+     * 同步处理图片消息并返回流式回复
      */
     public String processImageMessageSync(WechatRobotMessageDto messageDto, String timestamp, String nonce, WechatBotConfig config) {
         try {
-            String fileName = "未知图片";
-            if (messageDto.getImage() != null) {
-                fileName = messageDto.getImage().getFileName();
-            }
-            
-            log.info("Processing image message synchronously: fileName={}", fileName);
-            
             String streamId = UUID.randomUUID().toString().substring(0, 10);
             
             // 提供真实的图片处理反馈
             StringBuilder responseBuilder = new StringBuilder();
-            responseBuilder.append("感谢您分享图片：").append(fileName).append("\n\n");
+            responseBuilder.append("感谢您分享图片：\n");
             responseBuilder.append("我已成功接收到您发送的图片文件。\n");
             responseBuilder.append("目前我主要专注于文本对话交流，\n");
             responseBuilder.append("如果您有关于这张图片的问题或需要讨论图片相关内容，\n");
@@ -322,53 +334,15 @@ public class WechatRobotMessageServiceImpl implements WechatRobotMessageService 
     }
 
     /**
-     * 同步处理语音消息并返回流式回复todo
-     */
-    public String processVoiceMessageSync(WechatRobotMessageDto messageDto, String timestamp, String nonce, WechatBotConfig config) {
-        try {
-            String duration = "未知时长";
-            if (messageDto.getVoice() != null) {
-                duration = messageDto.getVoice().getDuration() + "秒";
-            }
-            
-            log.info("Processing voice message synchronously: duration={}", duration);
-            
-            String streamId = UUID.randomUUID().toString().substring(0, 10);
-            
-            // 提供真实的语音处理反馈
-            StringBuilder responseBuilder = new StringBuilder();
-            responseBuilder.append("感谢您发送语音消息（时长：").append(duration).append("）\n\n");
-            responseBuilder.append("我已成功接收到您的语音消息。\n");
-            responseBuilder.append("目前我主要通过文本方式进行交流，\n");
-            responseBuilder.append("如果您有任何问题或需要帮助，\n");
-            responseBuilder.append("可以直接发送文字消息给我，我会及时回复您。\n\n");
-            responseBuilder.append("期待与您的文字交流！");
-            
-            return createStreamReply(streamId, responseBuilder.toString(), true, timestamp, nonce, config);
-            
-        } catch (Exception e) {
-            log.error("Failed to process voice message synchronously", e);
-            return createTextStreamReply("处理语音消息时发生错误：" + e.getMessage(), timestamp, nonce, config);
-        }
-    }
-    
-    /**
-     * 同步处理文件消息并返回流式回复todo
+     * 同步处理文件消息并返回流式回复
      */
     public String processFileMessageSync(WechatRobotMessageDto messageDto, String timestamp, String nonce, WechatBotConfig config) {
         try {
-            String fileName = "未知文件";
-            if (messageDto.getFile() != null) {
-                fileName = messageDto.getFile().getFileName();
-            }
-            
-            log.info("Processing file message synchronously: fileName={}", fileName);
-            
             String streamId = UUID.randomUUID().toString().substring(0, 10);
             
             // 提供真实的文件处理反馈
             StringBuilder responseBuilder = new StringBuilder();
-            responseBuilder.append("感谢您分享文件：").append(fileName).append("\n\n");
+            responseBuilder.append("感谢您分享文件:\n");
             responseBuilder.append("我已成功接收到您发送的文件。\n");
             responseBuilder.append("目前我主要专注于文本对话交流，\n");
             responseBuilder.append("如果您有关于这个文件的问题或需要讨论文件相关内容，\n");
@@ -411,7 +385,7 @@ public class WechatRobotMessageServiceImpl implements WechatRobotMessageService 
     }
     
     /**
-     * 处理事件消息todo
+     * 处理事件消息 todo
      */
     public String processEventMessageSync(WechatRobotMessageDto messageDto, String timestamp, String nonce, WechatBotConfig config) {
         try {

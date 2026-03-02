@@ -122,12 +122,7 @@ public class WechatRobotMessageDto {
         /**
          * 图片URL
          */
-        private String imageUrl;
-        
-        /**
-         * 图片文件名
-         */
-        private String fileName;
+        private String url;
     }
 
     /**
@@ -136,14 +131,9 @@ public class WechatRobotMessageDto {
     @Data
     public static class VoiceContent {
         /**
-         * 语音URL
+         * 语音内容
          */
-        private String voiceUrl;
-        
-        /**
-         * 语音时长（秒）
-         */
-        private Integer duration;
+        private String content;
     }
 
     /**
@@ -154,17 +144,7 @@ public class WechatRobotMessageDto {
         /**
          * 文件URL
          */
-        private String fileUrl;
-        
-        /**
-         * 文件名
-         */
-        private String fileName;
-        
-        /**
-         * 文件大小（字节）
-         */
-        private Long fileSize;
+        private String url;
     }
 
     /**
@@ -203,10 +183,5 @@ public class WechatRobotMessageDto {
          * 事件类型
          */
         private String eventType;
-        
-        /**
-         * 事件数据
-         */
-        private String eventData;
     }
 }
