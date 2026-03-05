@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iflytek.astron.console.hub.mapper.wechat.WechatWorkConfigMapper">
+
+    <resultMap id="BaseResultMap" type="com.iflytek.astron.console.hub.entity.wechat.WechatWorkConfig">
+        <id column="id" property="id"/>
+        <result column="enterprise_id" property="enterpriseId"/>
+        <result column="corpid" property="corpid"/>
+        <result column="corpsecret" property="corpsecret"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, enterprise_id, corpid, corpsecret, create_time, update_time
+    </sql>
+
+    <select id="selectByEnterpriseId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM wechat_work_config
+        WHERE enterprise_id = #{enterpriseId}
+        LIMIT 1
+    </select>
+
+</mapper>

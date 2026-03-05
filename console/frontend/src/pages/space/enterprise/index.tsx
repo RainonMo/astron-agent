@@ -14,6 +14,7 @@ import styles from './index.module.scss';
 import EnterpriseSpaceLayout from './base-layout';
 import SpaceManage from './page-components/space-manage';
 import MemberManage from './page-components/member-manage';
+import WechatWorkManage from './page-components/wechat-work-manage';
 import TeamSettings from './page-components/team-settings';
 
 import { getEnterpriseDetail } from '@/services/enterprise';
@@ -159,6 +160,7 @@ export default function Index() {
             <Route index element={<Navigate to="space" replace />} />
             <Route path="space" element={<SpaceManage />} />
             <Route path="member" element={<MemberManage />} />
+            <Route path="wechat-work" element={<WechatWorkManage />} />
             <Route path="team" element={<TeamSettings />} />
           </Route>
         </Routes>

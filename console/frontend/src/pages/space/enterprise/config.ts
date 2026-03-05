@@ -3,6 +3,7 @@ import {
   SpaceManageIcon,
   MemberManageIcon,
   TeamSettingsIcon,
+  WechatWorkIcon,
 } from '@/components/svg-icons/space';
 
 export const enterpriseMenuItems = [
@@ -19,6 +20,12 @@ export const enterpriseMenuItems = [
     icon: MemberManageIcon,
   },
   {
+    key: 'wechat-work',
+    title: '企微管理',
+    path: 'wechat-work',
+    icon: WechatWorkIcon,
+  },
+  {
     key: 'team',
     title: '团队设置',
     path: 'team',
@@ -30,5 +37,6 @@ export const enterpriseMenuItems = [
 export const PAGE_TITLES = {
   space: '空间管理',
   member: '成员管理',
+  'wechat-work': '企微管理',
   team: '团队设置',
 } as const;

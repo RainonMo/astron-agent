@@ -175,6 +175,28 @@ const TeamSettingsSvg = () => (
   </svg>
 );
 
+const WechatWorkSvg = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    version="1.1"
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+  >
+    <g>
+      <path
+        d="M8.5,1.5C4.9,1.5,2,3.6,2,6.2c0,1.4,0.8,2.7,2.1,3.5c-0.1,0.4-0.4,1.2-0.5,1.7c0,0,0,0.1,0,0.1c0,0.1,0.1,0.2,0.2,0.2c0,0,0.1,0,0.1,0c0.6-0.2,1.7-0.7,2.2-1c0.5,0.1,1,0.2,1.5,0.2c3.6,0,6.5-2.1,6.5-4.7C14,3.6,11.1,1.5,8.5,1.5z M5.8,5.5c0.4,0,0.7,0.3,0.7,0.7S6.2,6.9,5.8,6.9S5.1,6.6,5.1,6.2S5.4,5.5,5.8,5.5z M9.9,6.9c-0.4,0-0.7-0.3-0.7-0.7s0.3-0.7,0.7-0.7s0.7,0.3,0.7,0.7S10.3,6.9,9.9,6.9z"
+        fill="currentColor"
+      />
+      <path
+        d="M11.5,8.5c-2.5,0-4.5,1.5-4.5,3.3c0,1,0.6,1.9,1.5,2.5c-0.1,0.3-0.3,0.9-0.4,1.2c0,0,0,0.1,0,0.1c0,0.1,0.1,0.1,0.1,0.1c0,0,0.1,0,0.1,0c0.4-0.1,1.2-0.5,1.5-0.7c0.3,0.1,0.7,0.1,1.1,0.1c2.5,0,4.5-1.5,4.5-3.3S14,8.5,11.5,8.5z M10.3,10.8c0.3,0,0.5,0.2,0.5,0.5s-0.2,0.5-0.5,0.5s-0.5-0.2-0.5-0.5S10,10.8,10.3,10.8z M12.8,11.8c-0.3,0-0.5-0.2-0.5-0.5s0.2-0.5,0.5-0.5s0.5,0.2,0.5,0.5S13.1,11.8,12.8,11.8z"
+        fill="currentColor"
+      />
+    </g>
+  </svg>
+);
+
 export const SpaceManageIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={SpaceManageSvg} {...props} />
 );
@@ -185,4 +207,8 @@ export const MemberManageIcon = (props: Partial<CustomIconComponentProps>) => (
 
 export const TeamSettingsIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={TeamSettingsSvg} {...props} />
+);
+
+export const WechatWorkIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={WechatWorkSvg} {...props} />
 );

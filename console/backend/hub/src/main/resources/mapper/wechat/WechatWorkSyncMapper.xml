@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iflytek.astron.console.hub.mapper.wechat.WechatWorkSyncMapper">
+
+    <resultMap id="BaseResultMap" type="com.iflytek.astron.console.hub.entity.wechat.WechatWorkSync">
+        <id column="id" property="id"/>
+        <result column="userid" property="userid"/>
+        <result column="department" property="department"/>
+        <result column="phone" property="phone"/>
+        <result column="enterprise_id" property="enterpriseId"/>
+        <result column="sync_batch_id" property="syncBatchId"/>
+        <result column="sync_status" property="syncStatus"/>
+        <result column="error_msg" property="errorMsg"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, userid, department, phone, enterprise_id, sync_batch_id, sync_status, error_msg, create_time, update_time
+    </sql>
+
+    <insert id="batchInsertOrUpdate">
+        INSERT INTO wechat_work_sync (userid, department, phone, enterprise_id, sync_batch_id, sync_status, error_msg, create_time, update_time)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.userid}, #{item.department}, #{item.phone}, #{item.enterpriseId}, #{item.syncBatchId}, #{item.syncStatus}, #{item.errorMsg}, NOW(), NOW())
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        department = VALUES(department),
+        phone = VALUES(phone),
+        enterprise_id = VALUES(enterprise_id),
+        sync_batch_id = VALUES(sync_batch_id),
+        sync_status = VALUES(sync_status),
+        error_msg = VALUES(error_msg),
+        update_time = NOW()
+    </insert>
+
+    <delete id="deleteBySyncBatchId">
+        DELETE FROM wechat_work_sync WHERE sync_batch_id = #{syncBatchId}
+    </delete>
+
+</mapper>

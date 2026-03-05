@@ -11,10 +11,10 @@ spring:
   application:
     name: astron-console-hub
   datasource:
-    url: ${MYSQL_URL:jdbc:mysql://db:3306/astron_console?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&characterEncoding=utf8&createDatabaseIfNotExist=true}
+    url: ${MYSQL_URL:jdbc:mysql://172.169.91.60:3306/astron_console?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&characterEncoding=utf8}
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: ${MYSQL_USER:astron}
-    password: ${MYSQL_PASSWORD:astron-dev-env-db}
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD:root123}
     # HikariCP connection pool configuration
     hikari:
       # Maximum pool size
@@ -39,8 +39,8 @@ spring:
       leak-detection-threshold: 60000
   data:
     redis:
-      host: ${REDIS_HOST:redis}
-      port: ${REDIS_PORT:6379}
+      host: ${REDIS_HOST:172.169.91.60}
+      port: ${REDIS_PORT:16379}
       database: ${REDIS_DATABASE_CONSOLE:0}
       # Lettuce connection pool configuration for reduced memory usage
       lettuce:
@@ -49,15 +49,15 @@ spring:
           max-idle: 4        # Maximum number of idle connections
           min-idle: 1        # Minimum number of idle connections
           max-wait: 3000ms   # Maximum wait time when pool is exhausted
-      password: ${REDIS_PASSWORD:}
+      password: ${REDIS_PASSWORD:123}
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${OAUTH2_ISSUER_URI:http://auth-server:8000}
-          jwk-set-uri: ${OAUTH2_JWK_SET_URI:http://auth-server:8000/.well-known/jwks}
+          issuer-uri: ${OAUTH2_ISSUER_URI:http://172.169.91.60:8000}
+          jwk-set-uri: ${OAUTH2_JWK_SET_URI:http://172.169.91.60:8000/.well-known/jwks}
           audiences:
-            - ${OAUTH2_AUDIENCE:your-oauth2-client-id}
+            - ${OAUTH2_AUDIENCE:e3ba6fec42cfe996121f}
   servlet:
     multipart:
       max-file-size: 100MB
@@ -115,10 +115,10 @@ mybatis-plus:
 
 # S3(MinIO) basic configuration
 s3:
-  endpoint: ${OSS_ENDPOINT:http://minio:9000}
-  remoteEndpoint: ${OSS_REMOTE_ENDPOINT:http://your-host-domain:9000}
-  accessKey: ${OSS_ACCESS_KEY_ID:astron-uploader}
-  secretKey: ${OSS_ACCESS_KEY_SECRET:astron-uploader-secret}
+  endpoint: ${OSS_ENDPOINT:http://172.169.91.60:18998}
+  remoteEndpoint: ${OSS_REMOTE_ENDPOINT:http://172.169.91.60:18998}
+  accessKey: ${OSS_ACCESS_KEY_ID:minioadmin}
+  secretKey: ${OSS_ACCESS_KEY_SECRET:minioadmin123}
   bucket: ${OSS_BUCKET_CONSOLE:astron-agent}
   presignExpirySeconds: ${OSS_PRESIGN_EXPIRY_SECONDS_CONSOLE:600}
   enablePublicRead: true
@@ -175,8 +175,8 @@ maas:
   consumerId: ${MAAS_CONSUMER_ID:your-maas-consumer-id}
   consumerSecret: ${MAAS_CONSUMER_SECRET:your-maas-consumer-secret}
   consumerKey: ${MAAS_CONSUMER_KEY:your-maas-consumer-key}
-  publishApi: ${MAAS_PUBLISH_API:http://localhost:7880/workflow/v1/publish}
-  authApi: ${MAAS_AUTH_API:http://localhost:7880/workflow/v1/auth}
+  publishApi: ${MAAS_PUBLISH_API:http://172.169.91.60:7880/workflow/v1/publish}
+  authApi: ${MAAS_AUTH_API:http://172.169.91.60:7880/workflow/v1/auth}
   mcpHost: ${MAAS_MCP_HOST:https://xingchen-api.xf-yun.com/mcp/xingchen/flow/%s/sse}
   mcpRegister: ${MAAS_MCP_REGISTER:http://127.0.0.1:8080/workflow/release}
   workflowConfig: ${MAAS_WORKFLOW_CONFIG:http://127.0.0.1:8080/workflow/get-flow-advanced-config}
@@ -202,7 +202,7 @@ space:
       space-count: 10000
       user-count: 500
   invite-message-template:
-    url: ${CONSOLE_DOMAIN:localhost:3000}/sharepage?param=
+    url: ${CONSOLE_DOMAIN:172.169.91.60:3000}/sharepage?param=
 
 # WeChat third-party platform configuration
 wechat:
@@ -217,5 +217,20 @@ wechat:
     encoding-aes-key: ${WECHAT_ENCODING_AES_KEY:your_encoding_aes_key}
 
 tenant:
-  create-app: ${TENANT_CREATE_APP:http://localhost:5052/v2/app}
-  get-app-detail: ${TENANT_GET_APP_DETAIL:http://localhost:5052/v2/app/details}
+  create-app: ${TENANT_CREATE_APP:http://172.169.91.60:5052/v2/app}
+  get-app-detail: ${TENANT_GET_APP_DETAIL:http://172.169.91.60:5052/v2/app/details}
+
+# Casdoor configuration
+casdoor:
+  endpoint: ${CASDOOR_ENDPOINT:http://172.169.91.60:8000}
+  client-id: ${CASDOOR_CLIENT_ID:e3ba6fec42cfe996121f}
+  client-secret: ${CASDOOR_CLIENT_SECRET:0c18bf2a11ffbb756ec6ce47dae9e09bdd48e3dd}
+  # 登录使用的组织（admin 用户属于 built-in 组织）
+  login-organization: ${CASDOOR_LOGIN_ORGANIZATION:built-in}
+  # 登录使用的应用
+  login-application: ${CASDOOR_LOGIN_APPLICATION:app-built-in}
+  # 新用户所属组织（注册用户需要配置的组织）
+  user-organization: ${CASDOOR_USER_ORGANIZATION:example-org}
+  # 管理员账号配置（用于调用管理接口）
+  admin-username: ${CASDOOR_ADMIN_USERNAME:admin}
+  admin-password: ${CASDOOR_ADMIN_PASSWORD:Gwhl@2026}
